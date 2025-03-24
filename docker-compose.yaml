@@ -11,8 +11,10 @@ services:
       - ./api/.env
       - .env
     depends_on:
-      - redis
-      - postgres
+      redis:
+        condition: service_started
+      postgres:
+        condition: service_healthy
       # - ollama
     build:
       dockerfile: ./Dockerfile
@@ -38,7 +40,6 @@ services:
     image: redis:6.2.6-alpine
     container_name: redis
     command: redis-server --requirepass admin
-    restart: always
     networks:
       - internal
     env_file:
@@ -47,12 +48,17 @@ services:
   postgres:
     container_name: postgres
     image: postgres
-    restart: always
     shm_size: 128mb
     env_file:
       - .env
     networks:
       - internal
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
 
   # ollama:
   #   image: ollama/ollama:latest
