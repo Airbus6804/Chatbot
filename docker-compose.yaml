@@ -1,0 +1,75 @@
+services:
+  api:
+    tty: true
+    image: nikolaik/python-nodejs:latest
+    container_name: api
+    ports:
+      - 5293:5293
+    volumes:
+      - ./api/app:/usr/app
+    env_file:
+      - ./api/.env
+      - .env
+    depends_on:
+      - redis
+      - postgres
+      # - ollama
+    build:
+      dockerfile: ./Dockerfile
+      context: ./api
+    networks:
+      - internal
+  webapp:
+    image: node
+    tty: true
+    container_name: webapp-chatbot
+    volumes:
+      - ./webapp:/usr/app/src
+    env_file:
+      - ./webapp/.env
+
+    depends_on:
+      - redis
+      - postgres
+      # - ollama
+      - api
+
+  redis:
+    image: redis:6.2.6-alpine
+    container_name: redis
+    command: redis-server --requirepass admin
+    restart: always
+    networks:
+      - internal
+    env_file:
+      - .env
+
+  postgres:
+    container_name: postgres
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    env_file:
+      - .env
+    networks:
+      - internal
+
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   networks:
+  #     - internal
+  #   container_name: ollama
+  #   pull_policy: always
+  #   tty: true
+  #   restart: always
+  #   environment:
+  #     - OLLAMA_KEEP_ALIVE=24h
+  #     - OLLAMA_HOST=0.0.0.0
+
+networks:
+  internal:
+    driver: bridge
+    name: internal
+    external: false
+    driver_opts:
+      com.docker.network.driver.mtu: 1450

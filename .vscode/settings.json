@@ -1,0 +1,3 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/api/app/devenv/Scripts/python.exe"
+}
