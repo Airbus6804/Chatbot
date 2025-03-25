@@ -1,9 +1,7 @@
-from flask import Flask
-from db.connection import pg_db
+from package.Server.server import Server
 
-app = Flask(__name__)
+app = Server().app
 
-
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
+#To avoid Flask crash
+if(__name__ == "__main__"):
+    app.run(debug=True)
