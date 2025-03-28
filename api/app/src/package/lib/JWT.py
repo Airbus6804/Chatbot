@@ -7,6 +7,7 @@ class JWT:
     key = getenv("JWT_SECRET")
     auth_ttl = int(getenv('JWT_AUTH_TTL') or 3600) 
     email_ttl = int(getenv('JWT_EMAIL_TTL') or 86400)
+    chat_ttl = int(getenv('JWT_CHAT_TTL') or 1800)
     algorithm="HS256"
 
     def decode_jwt(self, token:str, ttl: int):

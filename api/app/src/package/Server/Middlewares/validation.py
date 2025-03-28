@@ -1,4 +1,6 @@
 from ...utils.middleware import BodyMiddleware
+from flask import jsonify
+from ..Responses.error import errorResponse
 from cerberus import Validator
 
 class ValidationMiddleware(BodyMiddleware):
@@ -11,10 +13,11 @@ class ValidationMiddleware(BodyMiddleware):
         super().__init__()
 
 
-    def before(self, next):
+    def before(self,next, **params):
         v = Validator(self.schema)
-        if(v.validate(self.body)):
-            return next()
-        
-        return "body error"
+        try:
+            if(v.validate(self.body)):
+                return next(**params)
+        except Exception as e:
+            return jsonify(errorResponse('body error')), 400
 

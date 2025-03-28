@@ -13,7 +13,7 @@ resend.ApiKeys.create(params)
 
 
 class Email():
-    emailFrom = "chatbot@resend.dev"
+    emailFrom = "info@chatbot.zoomit.cloud"
     emailTo: str
     subject:str
     html: str
@@ -36,7 +36,7 @@ class Email():
 {self.getFooter()}
 """
 
-    def send(self):
+    async def send(self):
         params: resend.Emails.SendParams = {
             "from": self.emailFrom,
             "to": [self.emailTo], 

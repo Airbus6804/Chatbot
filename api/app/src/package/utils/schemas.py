@@ -8,3 +8,9 @@ password = {
     'min': 8,
     'max': 20
 }
+
+llmChatMessage = {
+    'type': 'string',
+    'min': 1,
+    'max': pow(2, 12)
+}

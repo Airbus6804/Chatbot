@@ -1,19 +1,19 @@
 from ...models.User.UserModel import UserModel
 from ....utils.hashPassword import hashPassword
+from ....utils.db.transaction import Db_Transaction
 
-class UserRepository(): 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
+class UserRepository(Db_Transaction): 
 
     def createUser(self, email:str, password: str):
+
+        self.start_transaction()
 
         model = UserModel()
 
         model.email = email
         model.password = hashPassword(password)
 
-        return model.save()
+        return model.save(), self.commit_transaction, self.rollback_transacton
     
     def getUserFromId(self, id:int):   
         users = UserModel.select().where(UserModel.id == id)

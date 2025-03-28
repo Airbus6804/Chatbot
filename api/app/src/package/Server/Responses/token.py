@@ -1,2 +1,3 @@
+from .success import successResponse
 def tokenResponse(token:str):
-    return {'token': token, "status": "success"}
+    return successResponse({'token': token})

@@ -17,6 +17,9 @@ class KeyValueLib():
     def get(self, key:str):
         return self.connection.get(key)
     
+    def delete(self, key:str):
+        return self.connection.delete(key)
+    
     # def setJson(self, key:str, value:dict, ttl:int = None):
     #     return self.set(key, dumps(value), ttl)
     # def getJson(self, key:str):

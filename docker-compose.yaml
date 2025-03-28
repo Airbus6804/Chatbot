@@ -15,7 +15,8 @@ services:
         condition: service_started
       postgres:
         condition: service_healthy
-      # - ollama
+      ollama:
+        condition: service_healthy
     build:
       dockerfile: ./Dockerfile
       context: ./api
@@ -33,7 +34,7 @@ services:
     depends_on:
       - redis
       - postgres
-      # - ollama
+      - ollama
       - api
 
   redis:
@@ -60,17 +61,26 @@ services:
       timeout: 10s
       retries: 5
 
-  # ollama:
-  #   image: ollama/ollama:latest
-  #   networks:
-  #     - internal
-  #   container_name: ollama
-  #   pull_policy: always
-  #   tty: true
-  #   restart: always
-  #   environment:
-  #     - OLLAMA_KEEP_ALIVE=24h
-  #     - OLLAMA_HOST=0.0.0.0
+  ollama:
+    image: ollama/ollama:latest
+    networks:
+      - internal
+    container_name: ollama
+    pull_policy: always
+    volumes:
+      - ./ollama/ollamaData:/root/.ollama
+    tty: true
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+      - OLLAMA_HOST=0.0.0.0
+    build:
+      dockerfile: ./Dockerfile
+      context: ./ollama
+    healthcheck:
+      test: "bash -c 'cat < /dev/null > /dev/tcp/localhost/11434'"
+      interval: 5s
+      timeout: 10s
+      retries: 5
 
 networks:
   internal:
