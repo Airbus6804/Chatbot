@@ -6,7 +6,10 @@ from ...Responses import error, token
 
 def email_verify_service(jwt:str):
     
-    decoded_jwt = verify_email_activation_jwt(jwt)
+    try:
+        decoded_jwt = verify_email_activation_jwt(jwt)
+    except:
+        return jsonify(error.errorResponse('Token invalido'))
     
     if(decoded_jwt["has_expired"]):
         return jsonify(error.errorResponse('Email Scaduta')), 403

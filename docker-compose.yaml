@@ -26,16 +26,25 @@ services:
     image: node
     tty: true
     container_name: webapp-chatbot
+    networks:
+      - internal
     volumes:
       - ./webapp:/usr/app/src
+      - next_cache:/usr/app/src/.next
     env_file:
       - ./webapp/.env
+    ports:
+      - 5294:3000
 
     depends_on:
       - redis
       - postgres
       - ollama
       - api
+
+    build:
+      dockerfile: ./Dockerfile
+      context: ./webapp
 
   redis:
     image: redis:6.2.6-alpine
@@ -89,3 +98,6 @@ networks:
     external: false
     driver_opts:
       com.docker.network.driver.mtu: 1450
+
+volumes:
+  next_cache:
