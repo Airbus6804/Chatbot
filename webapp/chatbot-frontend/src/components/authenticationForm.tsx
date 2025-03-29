@@ -34,6 +34,7 @@ export default function AuthenticationForm({ onSubmit, error }: Props) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
+      password: "",
     },
   });
 

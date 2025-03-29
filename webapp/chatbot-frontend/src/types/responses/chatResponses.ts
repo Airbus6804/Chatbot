@@ -5,4 +5,13 @@ export type ChatCreatedResponse = ChatTokenResponse & {
   chatId: number;
   done: true;
 };
-export type ChatResponse = BaseResponse<"success", { done: true }>;
+export type ChatDoneResponse = BaseResponse<"success", { done: true }>;
+export type ChatInProgressResponse = { content: string; done: false };
+
+export type Chats = BaseResponse<
+  "success",
+  {
+    ownerChats: [{ name: string; id: number }];
+    guestChats: [{ name: string; id: number }];
+  }
+>;

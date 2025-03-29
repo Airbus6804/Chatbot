@@ -13,8 +13,7 @@ export default function StoreTokenAndRedirect({ redirectTo, token }: Props) {
   const router = useRouter();
 
   useEffect(() => {
-    new TokenManager().setAuthToken(token);
-    router.push(redirectTo);
+    new TokenManager().setAuthToken(token).then(() => router.push(redirectTo));
   }, [router]);
 
   return <></>;

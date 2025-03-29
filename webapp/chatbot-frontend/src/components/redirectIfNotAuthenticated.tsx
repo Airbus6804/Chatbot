@@ -13,9 +13,9 @@ export default function RedirectIfNotAuthenticated({ children }: Props) {
 
   useEffect(() => {
     const tokens = new TokenManager();
-    if (!tokens.isAuthenticated()) {
-      router.push("/login");
-    }
+    tokens.isAuthenticated().then((state) => {
+      if (!state) router.push("/login");
+    });
   }, [router]);
 
   return children;

@@ -11,7 +11,7 @@ def chatController(app: Flask):
     @use(authentication.UserAuthenticationMiddleware)
     @use(authentication.ChatAuthenticationMiddleware)
     def chat(user, chat_id, chatAuth):
-        return chatService.chatService(chat_id,user)
+        return chatService.chatService(chat_id=chat_id,user=user)
     
     @app.post('/create-chat')
     @use(validation.ValidationMiddleware, schema={"chat": schemas.llmChatMessage})

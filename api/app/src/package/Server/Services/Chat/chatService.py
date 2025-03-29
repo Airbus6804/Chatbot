@@ -55,7 +55,9 @@ def chatService(chat_id, user):
     
     responseStream = getResponseStream(response, callback)
 
-    return Response(responseStream(), content_type='application/json')
+    res =  Response(responseStream(), content_type='application/json')
+    res.headers["Keep-Alive"] = "timeout=40",
+    return res
 
 def returnChat(chat_id):
 
@@ -94,7 +96,9 @@ def createChatService(user):
 
     cache.delete(f'user-{user['userId']}-owner-chats')
 
-    return Response(responseStream(), content_type='application/json')
+    res =  Response(responseStream(), content_type='application/json')
+    res.headers["Keep-Alive"] = "timeout=40",
+    return res
 
 def returnChatSessionService(user, chat_id, owner: bool):
     

@@ -1,6 +1,6 @@
 import server from "@/actions/server";
-import { PageProps } from "../../../../../.next/types/app/(email_links)/email_verify/[token]/page";
 import StoreTokenAndRedirect from "@/components/storeTokenAndRedirect";
+import { PageProps } from "../../../../../.next/types/app/layout";
 
 export default async function Page({ params }: PageProps) {
   const { token } = await params;

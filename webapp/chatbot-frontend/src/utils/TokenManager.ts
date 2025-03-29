@@ -1,21 +1,89 @@
+import { setCookie, getCookie } from "cookies-next";
+import { decode, JwtPayload } from "jsonwebtoken";
+import { JwtUtils, UserJwt } from "./jwtUtils";
+import server from "@/actions/server";
+
 class TokenManager {
-  authToken: string | null;
-  chatTokens: Record<string, string>;
+  authToken: string | null = null;
+  ownerChatTokens: Record<string, string> = {};
+  guestChatTokens: Record<string, string> = {};
+
+  jwtUtils = new JwtUtils();
+
+  userInfo: UserJwt | null = null;
 
   constructor() {
     if (typeof window === "undefined")
       throw "Token manager can only be used on the client";
-    this.authToken = localStorage.getItem("authToken") ?? null;
-    this.chatTokens = JSON.parse(localStorage.getItem("chatTokens") ?? "{}");
+
+    this.ownerChatTokens = JSON.parse(
+      localStorage.getItem("owner-chat-tokens") ?? "{}"
+    );
+    this.guestChatTokens = JSON.parse(
+      localStorage.getItem("guest-chat-tokens") ?? "{}"
+    );
   }
 
-  isAuthenticated() {
-    return this.authToken !== null;
+  async getAuthCookie() {
+    if (!this.authToken) {
+      this.authToken = (await getCookie("auth-token")) ?? null;
+
+      if (this.authToken) {
+        this.userInfo = this.jwtUtils.decodeAuthToken(this.authToken);
+      }
+    }
+
+    return this.authToken;
   }
 
-  setAuthToken(newToken: string) {
+  async isAuthenticated() {
+    return (await this.getAuthCookie()) !== null;
+  }
+
+  async setAuthToken(newToken: string) {
     this.authToken = newToken;
-    localStorage.setItem("authToken", newToken);
+    this.userInfo = this.jwtUtils.decodeAuthToken(newToken);
+    await setCookie("auth-token", newToken, { sameSite: true });
+  }
+
+  setChatToken(chatId: string, token: string, owner: boolean) {
+    if (owner) {
+      this.ownerChatTokens[chatId] = token;
+      localStorage.setItem(
+        `owner-chat-tokens`,
+        JSON.stringify(this.ownerChatTokens)
+      );
+    } else {
+      this.guestChatTokens[chatId] = token;
+      localStorage.setItem(
+        `guest-chat-tokens`,
+        JSON.stringify(this.guestChatTokens)
+      );
+    }
+  }
+
+  #getChatToken(chatId: string, owner: boolean) {
+    const key = owner ? "ownerChatTokens" : "guestChatTokens";
+    if (this[key][chatId]) return this[key][chatId];
+
+    return null;
+  }
+
+  async getChatToken(chatId: string, owner: boolean) {
+    const token = this.#getChatToken(chatId, owner);
+
+    if (token && this.jwtUtils.isChatTokenValid(token)) return token;
+
+    const newToken = await server("getTokenForChat", { chatId, owner });
+
+    console.log(newToken);
+
+    if (newToken.status === "success") {
+      this.setChatToken(chatId, newToken.chatToken, owner);
+      return newToken.chatToken;
+    }
+
+    return false;
   }
 }
 
