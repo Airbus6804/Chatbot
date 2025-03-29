@@ -1,17 +1,15 @@
 import ChatPage from "@/pages/chatPage/chatPage";
 import ChatMessage from "@/types/ChatMessage";
+import Fetcher from "@/utils/Fetcher";
 
 export default async function Page({ params }: { params: any }) {
-  //fetch messages
-  const messages: ChatMessage[] = [];
+    const { chatId, role } = await params;
 
-  const { chatId, role } = await params;
-
-  return (
-    <ChatPage
-      defaultMessages={messages}
-      defautlChatid={chatId}
-      owner={role === "owner"}
-    />
-  );
+    return (
+        <ChatPage
+            defaultMessages={[]}
+            defautlChatid={chatId}
+            owner={role === "owner"}
+        />
+    );
 }

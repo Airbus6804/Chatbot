@@ -1,5 +1,5 @@
 export default interface ChatMessage {
-  text: string;
-  loading: boolean;
-  sender: string;
+    text: string;
+    loading: boolean;
+    email: string;
 }

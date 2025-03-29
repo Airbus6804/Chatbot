@@ -5,26 +5,26 @@ import ChatMessage from "@/types/ChatMessage";
 import { useParams } from "next/navigation";
 
 interface Props {
-  defaultMessages: ChatMessage[];
-  defautlChatid: null | string;
-  owner: boolean;
+    defaultMessages: ChatMessage[];
+    defautlChatid: null | string;
+    owner: boolean;
 }
 
 export default function ChatPage({
-  defaultMessages,
-  defautlChatid,
-  owner,
+    defaultMessages,
+    defautlChatid,
+    owner,
 }: Props) {
-  return (
-    <div>
-      <SidebarProvider>
-        <ChatPageSidebar />
-        <Chat
-          defaultMessages={defaultMessages}
-          defaultChatId={defautlChatid}
-          owner={owner}
-        />
-      </SidebarProvider>
-    </div>
-  );
+    return (
+        <div>
+            <SidebarProvider>
+                <ChatPageSidebar chatId={defautlChatid} />
+                <Chat
+                    defaultMessages={defaultMessages}
+                    defaultChatId={defautlChatid}
+                    owner={owner}
+                />
+            </SidebarProvider>
+        </div>
+    );
 }

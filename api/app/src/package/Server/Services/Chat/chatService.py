@@ -69,7 +69,7 @@ def returnChat(chat_id):
         chatHistory = ChatRepository().getChatFromId(int(chat_id))
         cache.set(f'chat-history-{chat_id}', json.dumps(chatHistory), 86400)
 
-    return jsonify(chatHistory)
+    return jsonify(successResponse({'chat':chatHistory}))
 
 def createChatService(user):
 

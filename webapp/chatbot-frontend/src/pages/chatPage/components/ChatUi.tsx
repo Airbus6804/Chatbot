@@ -6,59 +6,79 @@ import ChatMessage from "./ChatMessage";
 import IChatMessage from "@/types/ChatMessage";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import ChatInviteModal from "./InviteModal";
 
 interface Props {
-  messages: IChatMessage[];
-  handleNewMessage: (newMessage: string) => void;
+    messages: IChatMessage[];
+    handleNewMessage: (newMessage: string) => void;
+    handleSendInvite: (email: string) => void;
+    chatId: null | string;
+    owner: boolean;
 }
 
-export default function ChatUi({ messages, handleNewMessage }: Props) {
-  const [newMessage, setNewMessage] = useState("");
+export default function ChatUi({
+    messages,
+    handleNewMessage,
+    handleSendInvite,
+    chatId,
+    owner,
+}: Props) {
+    const [newMessage, setNewMessage] = useState("");
 
-  const handleSendNewMessage = () => {
-    handleNewMessage(newMessage);
-    setNewMessage("");
-  };
+    const handleSendNewMessage = () => {
+        handleNewMessage(newMessage);
+        setNewMessage("");
+    };
 
-  const chatList = useRef<HTMLDivElement | null>(null);
+    const chatList = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    if (chatList.current) {
-      chatList.current.scrollTo({
-        top: chatList.current.scrollHeight,
-      });
-    }
-  }, [messages]);
+    useEffect(() => {
+        if (chatList.current) {
+            chatList.current.scrollTo({
+                top: chatList.current.scrollHeight,
+            });
+        }
+    }, [messages]);
 
-  return (
-    <>
-      <Card
-        ref={chatList}
-        style={{ backgroundColor: "#0e121c" }}
-        className="flex-1 flex flex-col gap-8 relative isolate overflow-y-auto bg-input"
-      >
-        {messages.map((m, index) => (
-          <ChatMessage data={m} key={index} />
-        ))}
-      </Card>
+    return (
+        <>
+            <Card
+                ref={chatList}
+                style={{ backgroundColor: "#0e121c" }}
+                className="flex-1 flex flex-col gap-8 relative isolate overflow-y-auto bg-input">
+                {messages.map((m, index) => (
+                    <ChatMessage data={m} key={index} />
+                ))}
+            </Card>
 
-      <Textarea
-        className="resize-none"
-        placeholder="Il tuo messaggio"
-        value={newMessage}
-        onChange={(e) => {
-          if (!e.isPropagationStopped()) setNewMessage(e.currentTarget.value);
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey && newMessage.length > 0) {
-            e.preventDefault();
-            return handleSendNewMessage();
-          }
-        }}
-      ></Textarea>
-      <Button disabled={newMessage.length === 0} onClick={handleSendNewMessage}>
-        Invia
-      </Button>
-    </>
-  );
+            <Textarea
+                className="resize-none"
+                placeholder="Il tuo messaggio"
+                value={newMessage}
+                onChange={(e) => {
+                    if (!e.isPropagationStopped())
+                        setNewMessage(e.currentTarget.value);
+                }}
+                onKeyDown={(e) => {
+                    if (e.currentTarget !== e.target) return;
+                    if (
+                        e.key === "Enter" &&
+                        !e.shiftKey &&
+                        newMessage.length > 0
+                    ) {
+                        e.preventDefault();
+                        return handleSendNewMessage();
+                    }
+                }}></Textarea>
+            <Button
+                disabled={newMessage.length === 0}
+                onClick={handleSendNewMessage}>
+                Invia
+            </Button>
+            <ChatInviteModal
+                disabled={!Boolean(chatId) || !owner}
+                handleSendInvite={handleSendInvite}
+            />
+        </>
+    );
 }
