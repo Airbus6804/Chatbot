@@ -117,6 +117,15 @@ services:
             - ./certbot/www:/var/www/certbot
         command: certonly --webroot -w /var/www/certbot --force-renewal --email aleragonesi04@gmail.com -d zoomit.cloud --agree-tos
 
+    portainer:
+        image: portainer/portainer-ce:latest
+        ports:
+            - 9443:9443
+        volumes:
+            - portainer-data:/data
+            - /var/run/docker.sock:/var/run/docker.sock
+        restart: unless-stopped
+
 networks:
     internal:
         driver: bridge
@@ -127,3 +136,4 @@ networks:
 
 volumes:
     next_cache:
+    portainer-data:

@@ -13,3 +13,5 @@ sudo docker rm postgres;
 sudo docker rm ollama;
 sudo docker rm nginx;
 sudo docker rm certbot;
+
+#chmod +x ./clean-containers.sh
