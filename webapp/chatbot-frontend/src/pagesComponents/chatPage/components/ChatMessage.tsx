@@ -13,6 +13,7 @@ import {
     ChatInProgressResponse,
 } from "@/types/responses/chatResponses";
 import { useEffect, useState } from "react";
+import { decode } from "html-entities";
 
 interface Props {
     data: IChatMessage;
@@ -52,7 +53,7 @@ export default function ChatMessage({ data }: Props) {
             <Card className="flex-1 max-w-8/12">
                 <CardHeader className="!normal-case">
                     <CardTitle className="!normal-case whitespace-pre-wrap">
-                        {currentMessage}
+                        {decode(currentMessage)}
                         {currentLoading && (
                             <div className="inline-block h-5 w-1 bg-white" />
                         )}

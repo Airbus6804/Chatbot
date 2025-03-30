@@ -1,6 +1,4 @@
-import ChatPage from "@/pages/chatPage/chatPage";
-import ChatMessage from "@/types/ChatMessage";
-import Fetcher from "@/utils/Fetcher";
+import ChatPage from "@/pagesComponents/chatPage/chatPage";
 
 export default async function Page({ params }: { params: any }) {
     const { chatId, role } = await params;

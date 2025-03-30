@@ -1,6 +1,8 @@
 "use client";
-import server from "@/actions/server";
+
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  return <div>cddddddddddddddddddddddidccdsdao</div>;
+    redirect("/chat");
+    return <div>cddddddddddddddddddddddidccdsdao</div>;
 }

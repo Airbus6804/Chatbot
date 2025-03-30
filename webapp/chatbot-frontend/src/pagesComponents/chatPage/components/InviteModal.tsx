@@ -23,8 +23,6 @@ export default function ChatInviteModal({ handleSendInvite, disabled }: Props) {
     const schema = z.string().email("Email non valida");
     const [error, setError] = useState("");
 
-    console.log(error);
-
     return (
         <Dialog>
             <DialogTrigger asChild>

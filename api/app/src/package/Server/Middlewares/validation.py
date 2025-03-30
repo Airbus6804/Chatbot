@@ -15,7 +15,6 @@ class ValidationMiddleware(BodyMiddleware):
 
     def before(self,next, **params):
         v = Validator(self.schema)
-        print(self.body)
         try:
             if(v.validate(self.body)):
                 return next(**params)

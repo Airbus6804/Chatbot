@@ -1,21 +1,24 @@
 import Fetcher from "@/utils/Fetcher";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest, { params }: any) {
-  const fetcher = new Fetcher();
+    const fetcher = new Fetcher();
 
-  console.log("chatting");
+    const body = await request.json();
 
-  const body = await request.json();
+    if (typeof body.chat !== "string") throw "Invalid Body";
+    if (typeof body.chatToken !== "string") throw "Invalid Body";
 
-  if (typeof body.chat !== "string") throw "Invalid Body";
-  if (typeof body.chatToken !== "string") throw "Invalid Body";
+    const { chatId } = await params;
 
-  const stream = await fetcher.chat({
-    chat: body.chat,
-    chatId: (await params).chatId,
-    chatToken: body.chatToken,
-  });
+    const stream = await fetcher.chat({
+        chat: body.chat,
+        chatId,
+        chatToken: body.chatToken,
+    });
 
-  return new NextResponse(stream);
+    revalidatePath(`/chat/${chatId}`, "layout");
+
+    return new NextResponse(stream);
 }

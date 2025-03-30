@@ -1,3 +1,5 @@
+"use server";
+
 import BaseResponse from "@/types/responses/baseResponse";
 import {
     ChatCreatedResponse,
@@ -116,11 +118,9 @@ class Fetcher {
     }
 
     async getTokenForChat(params: { chatId: string; owner: boolean }) {
-        console.log("getting token");
         const data = await this.authenticatedAxios.get<ChatTokenResponse>(
             `/chat/${params.chatId}/session${!params.owner ? "/guest" : ""}`
         );
-        console.log(data);
         return data;
     }
 
@@ -152,8 +152,6 @@ class Fetcher {
                 headers: { "Chat-Auth-Token": params.chatToken },
             }
         );
-
-        console.log(params);
 
         return data.data;
     }

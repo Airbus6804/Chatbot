@@ -5,11 +5,12 @@ from peewee import fn, Cast
 from psycopg2.extras import Json 
 from datetime import datetime
 import json
+import html
 
 class ChatRepository(Db_Transaction): 
 
     def chatFactory(self, text: str, sender: str):
-        return {"text": text, "email": sender, "timestamp": int(datetime.now().timestamp())}
+        return {"text": html.escape(text), "email": sender, "timestamp": int(datetime.now().timestamp())}
 
     def getChatFromId(self, id:int):
         chat =  list(ChatModel().select().where(ChatModel.id==id))
@@ -52,12 +53,12 @@ class ChatRepository(Db_Transaction):
         return record
     
     def getOwnerChats(self, user_id: int):
-        chats = list(ChatModel().select(ChatModel.name, ChatModel.id).where(ChatModel.owner == user_id).dicts())
+        chats = list(ChatModel().select(ChatModel.name, ChatModel.id).order_by(ChatModel.id.desc()).where(ChatModel.owner == user_id).dicts())
 
         return chats
 
     def getGuestChats(self, user_id:int):
-        chats = list(User_Chat_Relation_Model().select(ChatModel.name, ChatModel.id).join(ChatModel, on=(User_Chat_Relation_Model.chat == ChatModel.id)).where(User_Chat_Relation_Model.guest == user_id).dicts())
+        chats = list(User_Chat_Relation_Model().select(ChatModel.name, ChatModel.id).order_by(User_Chat_Relation_Model.id.desc()).join(ChatModel, on=(User_Chat_Relation_Model.chat == ChatModel.id)).where(User_Chat_Relation_Model.guest == user_id).dicts())
         
         return chats
         

@@ -1,3 +1,5 @@
+"use server";
+
 import {
     Sidebar,
     SidebarContent,
@@ -43,8 +45,8 @@ export default async function ChatPageSidebar({ chatId }: Props) {
                     <SidebarGroup>
                         <SidebarGroupLabel>Le tue chat</SidebarGroupLabel>
                         <SidebarGroupContent className={"gap-3 flex flex-col"}>
-                            {chats.ownerChats.map((chat) => (
-                                <SidebarMenu key={chat.id}>
+                            {chats.ownerChats.map((chat, index) => (
+                                <SidebarMenu key={`${chat.id}-${index}`}>
                                     <SidebarMenuItem>
                                         <Link href={`/chat/${chat.id}/owner`}>
                                             <SidebarMenuButton
@@ -68,8 +70,8 @@ export default async function ChatPageSidebar({ chatId }: Props) {
                     <SidebarGroup>
                         <SidebarGroupLabel>Chat ospite</SidebarGroupLabel>
                         <SidebarGroupContent>
-                            {chats.guestChats.map((chat) => (
-                                <SidebarMenu key={chat.id}>
+                            {chats.guestChats.map((chat, index) => (
+                                <SidebarMenu key={`${chat.id}-${index}`}>
                                     <SidebarMenuItem>
                                         <Link href={`/chat/${chat.id}/guest`}>
                                             <SidebarMenuButton

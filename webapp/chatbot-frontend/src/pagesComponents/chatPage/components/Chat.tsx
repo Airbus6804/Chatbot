@@ -1,13 +1,12 @@
 "use client";
+import server from "@/actions/server";
 import ChatMessage from "@/types/ChatMessage";
+import { ChatCreatedResponse } from "@/types/responses/chatResponses";
+import LLMStream from "@/utils/LLMStream";
 import TokenManager from "@/utils/TokenManager";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import ChatUi from "./ChatUi";
-import { useParams } from "next/navigation";
-import LLMStream from "@/utils/LLMStream";
-import { ChatCreatedResponse } from "@/types/responses/chatResponses";
-import { useRouter } from "next/navigation";
-import server from "@/actions/server";
 
 interface Props {
     defaultMessages: ChatMessage[];
@@ -18,7 +17,6 @@ interface Props {
 export default function Chat({ defaultMessages, defaultChatId, owner }: Props) {
     const [messages, setMessages] = useState(defaultMessages);
     const [chatId, setChatId] = useState(defaultChatId);
-    const params = useParams();
     const router = useRouter();
     const tokenManager = useMemo(() => new TokenManager(), [router]);
 
@@ -41,7 +39,6 @@ export default function Chat({ defaultMessages, defaultChatId, owner }: Props) {
                     router.push("/chat");
                     return;
                 }
-                console.log(chatHistory);
                 setMessages(chatHistory.chat);
             }
         })();
@@ -56,8 +53,6 @@ export default function Chat({ defaultMessages, defaultChatId, owner }: Props) {
             { loading: false, email: email, text: newMessage },
             { loading: true, email: "chatbot", text: "" },
         ]);
-
-        console.log(chatId);
 
         if (!chatId) {
             const newChat = (await LLMStream.start<ChatCreatedResponse>(
@@ -74,8 +69,6 @@ export default function Chat({ defaultMessages, defaultChatId, owner }: Props) {
         } else {
             const token = await tokenManager.getChatToken(chatId, owner);
 
-            console.log(token);
-
             if (token) {
                 await LLMStream.start(`/api/chat/${chatId}`, {
                     chat: newMessage,
@@ -83,6 +76,7 @@ export default function Chat({ defaultMessages, defaultChatId, owner }: Props) {
                 });
             }
         }
+
         // else {
         //   const a = LLMStream.start('')
         // }

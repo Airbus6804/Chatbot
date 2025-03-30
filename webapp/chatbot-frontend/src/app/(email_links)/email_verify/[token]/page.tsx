@@ -10,3 +10,5 @@ export default async function Page({ params }: any) {
 
     return <StoreTokenAndRedirect redirectTo="/chat" token={session.token} />;
 }
+
+export const dynamic = "force-dynamic";

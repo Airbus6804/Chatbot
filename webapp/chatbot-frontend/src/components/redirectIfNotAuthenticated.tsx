@@ -5,18 +5,19 @@ import { useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 
 interface Props {
-  children: ReactNode;
+    children: ReactNode;
 }
 
 export default function RedirectIfNotAuthenticated({ children }: Props) {
-  const router = useRouter();
+    const router = useRouter();
 
-  useEffect(() => {
-    const tokens = new TokenManager();
-    tokens.isAuthenticated().then((state) => {
-      if (!state) router.push("/login");
-    });
-  }, [router]);
+    useEffect(() => {
+        if (!window) return;
+        const tokens = new TokenManager();
+        tokens.isAuthenticated().then((state) => {
+            if (!state) router.push("/login");
+        });
+    }, [router]);
 
-  return children;
+    return children;
 }

@@ -1,7 +1,7 @@
 {
   "watch": ["./src"],
   "ext": "py",
-  "exec": "flask run --host=0.0.0.0 --port=${PORT} || exit 1",
+  "exec": "PYTHONPATH=/usr/app/src gunicorn src.app:app --workers=2 || exit 1",
   "legacy-watch": true,
   "verbose": true
 }

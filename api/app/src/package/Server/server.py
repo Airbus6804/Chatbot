@@ -20,7 +20,6 @@ class Server:
         def handleExeption(e): self.errorHandler(e)
         
     def errorHandler(e):
-        print(e)
         return jsonify(errorResponse('generic error')), 500
 
         

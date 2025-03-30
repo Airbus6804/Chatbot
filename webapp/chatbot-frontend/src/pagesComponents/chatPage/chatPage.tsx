@@ -1,8 +1,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
-import ChatPageSidebar from "./components/Sidebar";
-import Chat from "./components/Chat";
 import ChatMessage from "@/types/ChatMessage";
-import { useParams } from "next/navigation";
+import Chat from "./components/Chat";
+import ChatPageSidebar from "./components/Sidebar";
 
 interface Props {
     defaultMessages: ChatMessage[];
