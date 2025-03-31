@@ -122,6 +122,7 @@ services:
             - internal
 
     portainer:
+        container_name: certbot
         image: portainer/portainer-ce:latest
         volumes:
             - portainer-data:/data
