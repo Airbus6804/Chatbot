@@ -102,10 +102,11 @@ services:
             - 80:80
             - 443:443
         volumes:
-            - ./nginx/cert-nginx.conf:/etc/nginx/nginx.conf # use this the first time to obtain certificates
-            # - ./nginx/nginx.conf:/etc/nginx/nginx.conf
             - ./certbot/conf:/etc/letsencrypt
             - ./certbot/www:/var/www/certbot
+            # - ./nginx/cert-nginx.conf:/etc/nginx/nginx.conf # use this the first time to obtain certificates
+            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+
         restart: always
         networks:
             - internal
@@ -122,12 +123,12 @@ services:
 
     portainer:
         image: portainer/portainer-ce:latest
-        ports:
-            - 9443:9443
         volumes:
             - portainer-data:/data
             - /var/run/docker.sock:/var/run/docker.sock
         restart: unless-stopped
+        networks:
+            - internal
 
 networks:
     internal:
