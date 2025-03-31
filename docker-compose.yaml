@@ -104,8 +104,8 @@ services:
         volumes:
             - ./certbot/conf:/etc/letsencrypt
             - ./certbot/www:/var/www/certbot
-            # - ./nginx/cert-nginx.conf:/etc/nginx/nginx.conf # use this the first time to obtain certificates
-            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ./nginx/cert-nginx.conf:/etc/nginx/nginx.conf # use this the first time to obtain certificates
+            # - ./nginx/nginx.conf:/etc/nginx/nginx.conf
 
         restart: always
         networks:
