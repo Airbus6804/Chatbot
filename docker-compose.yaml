@@ -3,8 +3,6 @@ services:
         tty: true
         image: nikolaik/python-nodejs:latest
         container_name: api
-        ports:
-            - 5293:5293
         volumes:
             - ./api/app:/usr/app
         env_file:
@@ -33,8 +31,6 @@ services:
             - next_cache:/usr/app/src/.next
         env_file:
             - ./webapp/.env
-        ports:
-            - 5294:3000
 
         depends_on:
             - redis
